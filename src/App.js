@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+
+// import "./App.css";
+import Header from "./components/Header";
+import NewsGrid from "./components/NewsGrid";
+import Axios from "axios";
+// import Search from "./components/Search";
 
 function App() {
+  // const [value, setValue] = useState("");
+  const [news, setNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // let mounted=true
+   Axios.get(`http://newsapi.org/v2/top-headlines?country=in&apiKey=05e860d20e5548f49fde01598290c05c`)
+    .then(response=>{
+      const LatestNews=response.data.articles;
+      setNews(LatestNews)
+      setIsLoading(false)
+    })  
+    .catch(err=>console.log(err))
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      {/* <Search getValue={(v) => setValue(v)} /> */}
+      <NewsGrid isLoading={isLoading} news={news} />
+    </>
   );
 }
 
